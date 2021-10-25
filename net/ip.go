@@ -6,7 +6,7 @@ import (
 	"net"
 )
 
-func GetIp() {
+func GetIfIp() {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		log.Fatal(err)
@@ -39,7 +39,7 @@ func GetMacAddrs() (macAddrs []string) {
 	return macAddrs
 }
 
-func GetIPs() (ips []string) {
+func GetIfIPs() (ips []string) {
 
 	interfaceAddr, err := net.InterfaceAddrs()
 	if err != nil {
