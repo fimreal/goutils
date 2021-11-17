@@ -35,7 +35,7 @@ func newConfig() *Config {
 	return &Config{
 		LogLevel:    zap.NewAtomicLevel(),
 		ProjectName: "",
-		JSONFormat:  true,
+		JSONFormat:  false,
 		Console:     true,
 		AddCaller:   false,
 		LogFile: &Logfile{
@@ -109,14 +109,8 @@ func (l *Logger) syncConfig() {
 Options: -1(info), 0(debug), 1(warn), 2(error), 3(dpanic), 4(panic), 5(fatal)
 Default: -1(info)
 */
-func SetLevel(lv interface{}) {
+func SetLevel(lv string) {
 	setlevel := c.Config.LogLevel.SetLevel
-	if v, ok := lv.(zapcore.Level); ok {
-		setlevel(v)
-		return
-	} else {
-		c.Logger.Errorf("%t", lv)
-	}
 	switch lv {
 	case "debug":
 		// zap.DebugLevel zapcore.Level = -1

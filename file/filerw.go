@@ -15,8 +15,9 @@ func WriteToFile(fileName string, b []byte) (err error) {
 	return ioutil.WriteFile(fileName, b, 0644)
 }
 
-// 简单复制文件，如果目标文件不存在，则创建，权限 0644
-// 返回复制字节数，和 error
+/* 简单复制文件，如果目标文件不存在，则创建，权限 0644
+返回复制字节数，和 error
+*/
 func CopyFile(srcFilePath string, dstFilePath string) (int64, error) {
 
 	srcFile, _ := os.OpenFile(srcFilePath, os.O_RDONLY, 0644)

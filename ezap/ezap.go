@@ -2,6 +2,7 @@ package ezap
 
 var c *Logger
 
+// autonew logger
 func init() {
 	c = New()
 }
