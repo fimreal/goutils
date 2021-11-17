@@ -1,4 +1,4 @@
-package logger
+package ezap
 
 import (
 	"os"
@@ -31,7 +31,7 @@ type Logger struct {
 	Logger *zap.SugaredLogger
 }
 
-func NewConfig() *Config {
+func newConfig() *Config {
 	return &Config{
 		LogLevel:    zap.NewAtomicLevel(),
 		ProjectName: "",
@@ -49,7 +49,7 @@ func NewConfig() *Config {
 }
 
 // 应用修改后的配置
-func (l *Logger) SyncConfig() {
+func (l *Logger) syncConfig() {
 	conf := l.Config
 	cores := []zapcore.Core{}
 	var logger *zap.Logger
@@ -105,84 +105,101 @@ func (l *Logger) SyncConfig() {
 	l.Logger = logger.Sugar()
 }
 
-// 设置输出的日志等级
-// Options: info debug warn error panic fatal
-func (l *Logger) SetLevel(lv string) {
-	setlevel := l.Config.LogLevel.SetLevel
+/* **设置输出的日志等级
+Options: -1(info), 0(debug), 1(warn), 2(error), 3(dpanic), 4(panic), 5(fatal)
+Default: -1(info)
+*/
+func SetLevel(lv interface{}) {
+	setlevel := c.Config.LogLevel.SetLevel
+	if v, ok := lv.(zapcore.Level); ok {
+		setlevel(v)
+		return
+	} else {
+		c.Logger.Errorf("%t", lv)
+	}
 	switch lv {
 	case "debug":
-		setlevel(zap.DebugLevel)
+		// zap.DebugLevel zapcore.Level = -1
+		setlevel(-1)
 	case "info":
-		setlevel(zap.InfoLevel)
+		// zap.InfoLevel zapcore.Level = 0
+		setlevel(0)
 	case "warn":
-		setlevel(zap.WarnLevel)
+		// zap.WarnLevel zapcore.Level = 1
+		setlevel(1)
 	case "error":
-		setlevel(zap.ErrorLevel)
+		// zap.ErrorLevel zapcore.Level = 2
+		setlevel(2)
+	case "dpanic":
+		// zap.DPanicLevel zapcore.Level = 3
+		setlevel(3)
 	case "panic":
-		setlevel(zap.PanicLevel)
+		// zap.PanicLevel zapcore.Level = 4
+		setlevel(4)
 	case "fatal":
-		setlevel(zap.FatalLevel)
+		// zap.FatalLevel zapcore.Level = 5
+		setlevel(5)
 	default:
-		setlevel(zap.InfoLevel)
+		setlevel(0)
 	}
-	l.SyncConfig()
+	c.syncConfig()
 }
 
 // 设置工程名称
-func (l *Logger) SetProjectName(projectname string) {
-	l.Config.ProjectName = projectname
-	l.SyncConfig()
+func SetProjectName(projectname string) {
+	c.Config.ProjectName = projectname
+	c.syncConfig()
 }
 
 // 启用 JSON 格式输出
-func (l *Logger) EnableJSONFormat() {
-	l.Config.JSONFormat = true
-	l.SyncConfig()
+func EnableJSONFormat() {
+	c.Config.JSONFormat = true
+	c.syncConfig()
 }
 
 // 关闭 JSON 格式输出
-func (l *Logger) DisableJSONFormat() {
-	l.Config.JSONFormat = false
-	l.SyncConfig()
+func DisableJSONFormat() {
+	c.Config.JSONFormat = false
+	c.syncConfig()
 }
 
 // 开启调用日志输出
-func (l *Logger) EnableCaller() {
-	l.Config.AddCaller = true
-	l.SyncConfig()
+func EnableCaller() {
+	c.Config.AddCaller = true
+	c.syncConfig()
 }
 
 // 关闭调用日志输出
-func (l *Logger) DisableCaller() {
-	l.Config.AddCaller = false
-	l.SyncConfig()
+func DisableCaller() {
+	c.Config.AddCaller = false
+	c.syncConfig()
 }
 
 // 开启控制台日志输出
-func (l *Logger) EnableConsole() {
-	l.Config.Console = true
-	l.SyncConfig()
+func EnableConsole() {
+	c.Config.Console = true
+	c.syncConfig()
 }
 
 // 关闭控制台日志输出
-func (l *Logger) DisableConsole() {
-	l.Config.Console = false
-	l.SyncConfig()
+func DisableConsole() {
+	c.Config.Console = false
+	c.syncConfig()
 }
 
 // 设置日志保存文件，例如 /var/log/myapp/myapp.log
 // 如果配置为空，则不会保存到日志文件
-func (l *Logger) SetLogFile(name string) {
-	l.Config.LogFile.FileName = name
-	l.SyncConfig()
+func SetLogFile(name string) {
+	c.Config.LogFile.FileName = name
+	c.syncConfig()
 }
 
 // 配置日志滚动配置，默认 100M，24h，7天，启用压缩
-func (l *Logger) SetLogrotate(maxsize, maxage, maxbackups int, compress bool) {
-	f := l.Config.LogFile
+func SetLogrotate(maxsize, maxage, maxbackups int, compress bool) {
+	f := c.Config.LogFile
 	f.MaxSize = maxsize
 	f.MaxAge = maxage
 	f.MaxBackups = maxbackups
 	f.Compress = compress
-	l.SyncConfig()
+	c.syncConfig()
 }
