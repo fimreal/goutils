@@ -1,4 +1,4 @@
-package ezap
+package logger
 
 import (
 	"os"
@@ -49,7 +49,7 @@ func NewConfig() *Config {
 }
 
 // 应用修改后的配置
-func (l *Logger) ApplyConfig() {
+func (l *Logger) SyncConfig() {
 	conf := l.Config
 	cores := []zapcore.Core{}
 	var logger *zap.Logger
@@ -57,6 +57,7 @@ func (l *Logger) ApplyConfig() {
 	// cfg := zap.NewProductionConfig()
 	// encoderConfig := cfg.EncoderConfig
 	encoderConfig := zap.NewProductionConfig().EncoderConfig
+	encoderConfig.LevelKey = "lv"
 	encoderConfig.NameKey = "pj"
 	encoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 		enc.AppendString(t.Format("2006-1-2T15:04:05.000Z0700"))
@@ -65,6 +66,8 @@ func (l *Logger) ApplyConfig() {
 	if conf.JSONFormat {
 		encoder = zapcore.NewJSONEncoder(encoderConfig)
 	} else {
+		// 终端日志级别显示颜色
+		encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 		encoder = zapcore.NewConsoleEncoder(encoderConfig)
 	}
 
@@ -103,13 +106,14 @@ func (l *Logger) ApplyConfig() {
 }
 
 // 设置输出的日志等级
+// Options: info debug warn error panic fatal
 func (l *Logger) SetLevel(lv string) {
 	setlevel := l.Config.LogLevel.SetLevel
 	switch lv {
-	case "info":
-		setlevel(zap.InfoLevel)
 	case "debug":
 		setlevel(zap.DebugLevel)
+	case "info":
+		setlevel(zap.InfoLevel)
 	case "warn":
 		setlevel(zap.WarnLevel)
 	case "error":
@@ -121,56 +125,56 @@ func (l *Logger) SetLevel(lv string) {
 	default:
 		setlevel(zap.InfoLevel)
 	}
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 设置工程名称
 func (l *Logger) SetProjectName(projectname string) {
 	l.Config.ProjectName = projectname
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 启用 JSON 格式输出
 func (l *Logger) EnableJSONFormat() {
 	l.Config.JSONFormat = true
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 关闭 JSON 格式输出
 func (l *Logger) DisableJSONFormat() {
 	l.Config.JSONFormat = false
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 开启调用日志输出
 func (l *Logger) EnableCaller() {
 	l.Config.AddCaller = true
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 关闭调用日志输出
 func (l *Logger) DisableCaller() {
 	l.Config.AddCaller = false
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 开启控制台日志输出
 func (l *Logger) EnableConsole() {
 	l.Config.Console = true
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 关闭控制台日志输出
 func (l *Logger) DisableConsole() {
 	l.Config.Console = false
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 设置日志保存文件，例如 /var/log/myapp/myapp.log
 // 如果配置为空，则不会保存到日志文件
 func (l *Logger) SetLogFile(name string) {
 	l.Config.LogFile.FileName = name
-	l.ApplyConfig()
+	l.SyncConfig()
 }
 
 // 配置日志滚动配置，默认 100M，24h，7天，启用压缩
@@ -180,5 +184,5 @@ func (l *Logger) SetLogrotate(maxsize, maxage, maxbackups int, compress bool) {
 	f.MaxAge = maxage
 	f.MaxBackups = maxbackups
 	f.Compress = compress
-	l.ApplyConfig()
+	l.SyncConfig()
 }

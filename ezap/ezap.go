@@ -1,69 +1,91 @@
 package ezap
 
-func New() *Logger {
-	logger := &Logger{
-		Config: NewConfig(),
-	}
-	logger.ApplyConfig()
-	return logger
+import (
+	"github.com/fimreal/goutils/ezap/logger"
+)
+
+var Logger *logger.Logger
+
+func init() {
+	Logger = logger.New()
 }
 
-func (l *Logger) Debug(args ...interface{}) {
-	l.Logger.Debug(args...)
-}
-func (l *Logger) Debugf(template string, args ...interface{}) {
-	l.Logger.Debugf(template, args...)
-}
-func (l *Logger) Debugw(msg string, keysAndValues ...interface{}) {
-	l.Logger.Debugw(msg, keysAndValues)
+/* 设置输出的日志等级
+OPTIONS: debug info warn error fatal panic
+*/
+func SetLevel(lv string) {
+	Logger.SetLevel(lv)
 }
 
-func (l *Logger) Info(args ...interface{}) {
-	l.Logger.Info(args...)
-}
-func (l *Logger) Infof(template string, args ...interface{}) {
-	l.Logger.Infof(template, args...)
-}
-func (l *Logger) Infow(msg string, keysAndValues ...interface{}) {
-	l.Logger.Infow(msg, keysAndValues)
+func SetProjectName(projectname string) {
+	Logger.SetProjectName(projectname)
 }
 
-func (l *Logger) Warn(args ...interface{}) {
-	l.Logger.Warn(args...)
-}
-func (l *Logger) Warnf(template string, args ...interface{}) {
-	l.Logger.Warnf(template, args...)
-}
-func (l *Logger) Warnw(msg string, keysAndValues ...interface{}) {
-	l.Logger.Warnw(msg, keysAndValues)
+func SetLogFile(filename string) {
+	Logger.DisableCaller()
+	Logger.SetLogFile(filename)
 }
 
-func (l *Logger) Error(args ...interface{}) {
-	l.Logger.Error(args...)
-}
-func (l *Logger) Errorf(template string, args ...interface{}) {
-	l.Logger.Errorf(template, args...)
-}
-func (l *Logger) Errorw(msg string, keysAndValues ...interface{}) {
-	l.Logger.Errorw(msg, keysAndValues)
+func SetLogrotate(maxsize int, maxage int, maxbackups int, compress bool) {
+	Logger.SetLogrotate(maxsize, maxage, maxbackups, compress)
 }
 
-func (l *Logger) Fatal(args ...interface{}) {
-	l.Logger.Fatal(args...)
+func Debug(args ...interface{}) {
+	Logger.Debug(args...)
 }
-func (l *Logger) Fatalf(template string, args ...interface{}) {
-	l.Logger.Fatalf(template, args...)
+func Debugf(template string, args ...interface{}) {
+	Logger.Debugf(template, args...)
 }
-func (l *Logger) Fatalw(msg string, keysAndValues ...interface{}) {
-	l.Logger.Fatalw(msg, keysAndValues)
+func Debugw(msg string, keysAndValues ...interface{}) {
+	Logger.Debugw(msg, keysAndValues...)
 }
 
-func (l *Logger) Panic(args ...interface{}) {
-	l.Logger.Panic(args...)
+func Info(args ...interface{}) {
+	Logger.Info(args...)
 }
-func (l *Logger) Panicf(template string, args ...interface{}) {
-	l.Logger.Panicf(template, args...)
+func Infof(template string, args ...interface{}) {
+	Logger.Infof(template, args...)
 }
-func (l *Logger) Panicw(msg string, keysAndValues ...interface{}) {
-	l.Logger.Panicw(msg, keysAndValues)
+func Infow(msg string, keysAndValues ...interface{}) {
+	Logger.Infow(msg, keysAndValues...)
+}
+
+func Warn(args ...interface{}) {
+	Logger.Warn(args...)
+}
+func Warnf(template string, args ...interface{}) {
+	Logger.Warnf(template, args...)
+}
+func Warnw(msg string, keysAndValues ...interface{}) {
+	Logger.Warnw(msg, keysAndValues...)
+}
+
+func Error(args ...interface{}) {
+	Logger.Error(args...)
+}
+func Errorf(template string, args ...interface{}) {
+	Logger.Errorf(template, args...)
+}
+func Errorw(msg string, keysAndValues ...interface{}) {
+	Logger.Errorw(msg, keysAndValues...)
+}
+
+func Fatal(args ...interface{}) {
+	Logger.Fatal(args...)
+}
+func Fatalf(template string, args ...interface{}) {
+	Logger.Fatalf(template, args...)
+}
+func Fatalw(msg string, keysAndValues ...interface{}) {
+	Logger.Fatalw(msg, keysAndValues...)
+}
+
+func Panic(args ...interface{}) {
+	Logger.Panic(args...)
+}
+func Panicf(template string, args ...interface{}) {
+	Logger.Panicf(template, args...)
+}
+func Panicw(msg string, keysAndValues ...interface{}) {
+	Logger.Panicw(msg, keysAndValues...)
 }
