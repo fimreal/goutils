@@ -1,7 +1,7 @@
 package http
 
 import (
-	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -21,9 +21,10 @@ func HttpGet(url string) (result string, err error) {
 	for {
 		// 读取Body内容
 		n, err := resp.Body.Read(buf)
-		if n == 0 {
-			fmt.Println("读完！err:", err)
+		if err == io.EOF {
 			break
+		} else if err != nil {
+			return result, err
 		}
 		// 拼接每次buf中读到的数据，到result中，返回
 		result += string(buf[:n])
@@ -31,12 +32,14 @@ func HttpGet(url string) (result string, err error) {
 	return
 }
 
-// SimplePost 简单 post 调用，内部做了 header 处理和返回错误判断
-// 用法举例：
-// url := "http://example.com"
-// headers := make(map[string]string)
-// headers["Content-Type"] = "application/json;charset=utf-8"
-// resp, err := http.SimplePost(url, []byte("这里是 post 的数据"), headers)
+/* SimplePost 简单 post 调用，内部做了 header 处理和返回错误判断
+用法举例：
+url := "http://example.com"
+headers := make(map[string]string)
+headers["Content-Type"] = "application/json;charset=utf-8"
+
+resp, err := http.SimplePost(url, []byte("这里是 post 的数据"), headers)
+*/
 func SimplePost(url string, data []byte, headers map[string]string) ([]byte, error) {
 	client := &http.Client{}
 
