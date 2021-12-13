@@ -59,3 +59,19 @@ func SimplePost(url string, data []byte, headers map[string]string) ([]byte, err
 	// 省去判断 err ？
 	return body, err
 }
+
+func HttpBasicAuth(url string, username string, password string) ([]byte, error) {
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+	req.SetBasicAuth(username, password)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return ioutil.ReadAll(resp.Body)
+}
