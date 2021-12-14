@@ -1,5 +1,7 @@
 package ezap
 
+import "fmt"
+
 var c *Logger
 
 // autonew logger
@@ -13,6 +15,16 @@ func New() *Logger {
 	}
 	logger.syncConfig()
 	return logger
+}
+
+func Print(args ...interface{}) {
+	fmt.Print(args...)
+}
+func Println(template string, args ...interface{}) {
+	fmt.Println(args...)
+}
+func Printf(template string, args ...interface{}) {
+	fmt.Printf(template, args...)
 }
 
 func Debug(args ...interface{}) {
