@@ -20,7 +20,7 @@ func New() *Logger {
 func Print(args ...interface{}) {
 	fmt.Print(args...)
 }
-func Println(template string, args ...interface{}) {
+func Println(args ...interface{}) {
 	fmt.Println(args...)
 }
 func Printf(template string, args ...interface{}) {
