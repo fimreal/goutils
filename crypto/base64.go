@@ -22,3 +22,16 @@ func GetBase64Encodef(s string, encodeStd string) string {
 	s64 := base64.NewEncoding(encodeStd).EncodeToString([]byte(s))
 	return s64
 }
+
+func GetBase64UrlEncode(s string) string {
+	s64 := base64.URLEncoding.EncodeToString([]byte(s))
+	return s64
+}
+
+func GetBaseUrl64Decode(s string) (string, error) {
+	decoded, err := base64.URLEncoding.DecodeString(s)
+	if err != nil {
+		return "", err
+	}
+	return string(decoded), nil
+}
