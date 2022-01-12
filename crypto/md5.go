@@ -10,6 +10,7 @@ func GetMD5Encode(data string) string {
 	h := md5.New()
 	h.Write([]byte(data))
 	return hex.EncodeToString(h.Sum(nil))
+        // return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 //返回一个16位md5加密后的字符串, 半长
