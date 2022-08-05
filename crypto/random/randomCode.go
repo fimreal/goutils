@@ -44,10 +44,11 @@ func (c *code) New() func() string {
 
 	rand.Seed(time.Now().UnixNano() + 19940219)
 	return func() string {
-		b := make([]byte, c.Length)
+		b := make([]rune, c.Length)
+		compositionRune := []rune(c.Composition)
 		for i := 0; i < c.Length; i++ {
-			inx := rand.Intn(len(c.Composition))
-			b[i] = c.Composition[inx]
+			inx := rand.Intn(len(compositionRune))
+			b[i] = compositionRune[inx]
 		}
 		return string(b)
 	}

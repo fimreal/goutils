@@ -20,7 +20,7 @@ func TestNew(t *testing.T) {
 
 	c = &code{
 		Length:      32,
-		Composition: NumChar + LowAlphaChar + "∂ƒœ´",
+		Composition: NumChar + LowAlphaChar + "∂ƒœ´中文字符",
 	}
 	randomCode = c.New()
 	t.Log(randomCode())
