@@ -1,12 +1,14 @@
 package http
 
-import "fmt"
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestHttpBasicAuth(T *testing.T) {
-	url := "https://hproxy.epurs.com/allowme"
-	username := "i"
-	password := "1"
+	url := "https://epurs.com/health"
+	username := "123"
+	password := "123"
 	res, err := HttpBasicAuth(url, username, password)
 	if err != nil {
 		fmt.Println("err: ", err)
