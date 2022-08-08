@@ -15,3 +15,12 @@ func TestHttpBasicAuth(T *testing.T) {
 	}
 	fmt.Println("res: ", string(res))
 }
+
+func TestHttpGet(t *testing.T) {
+	url := "http://baidu.com"
+	res, err := HttpGet(url)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(res)
+}

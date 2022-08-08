@@ -7,19 +7,27 @@ import (
 	"strings"
 )
 
-func HttpGet(url string) (result string, err error) {
-	// 借助 http包的 Get()函数 获取网页数据
+func HttpGet(url string) (string, error) {
+
 	resp, err := http.Get(url)
 	if err != nil {
-		// 将错误传出
+		return "", err
+	}
+	res, err := ioutil.ReadAll(resp.Body)
+
+	return string(res), err
+}
+
+// 似乎只支持 https，没找到问题原因，慎用
+func HttpBufGet(url string) (result string, err error) {
+	resp, err := http.Get(url)
+	if err != nil {
 		return
 	}
-	// 读取结束，关闭resp.Body
 	defer resp.Body.Close()
 
 	buf := make([]byte, 4096)
 	for {
-		// 读取Body内容
 		n, err := resp.Body.Read(buf)
 		if err == io.EOF {
 			break
