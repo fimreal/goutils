@@ -8,13 +8,13 @@ import (
 )
 
 func HttpGet(url string) (string, error) {
-
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
-	res, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
 
+	res, err := ioutil.ReadAll(resp.Body)
 	return string(res), err
 }
 
