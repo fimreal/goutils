@@ -2,60 +2,38 @@ package net
 
 import (
 	"net"
+
+	"github.com/fimreal/goutils/ezap"
 )
 
-// 返回网卡获取到的第一个非回环 ip 地址
-func GetFirstIP() (string, error) {
-	addrs, err := net.InterfaceAddrs()
-	if err == nil {
-		for _, address := range addrs {
-			// 检查ip地址判断是否回环地址
-			if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
-				if ipnet.IP.To4() != nil {
-					// fmt.Println(ipnet.IP.String())
-					return ipnet.IP.String(), nil
-				}
-			}
-		}
+// 检查 IP 是否正确，是否为 IPv4 地址
+func IsIPv4(ip string) bool {
+	ipaddr := net.ParseIP(ip)
+
+	if ipaddr == nil {
+		return false
 	}
 
-	return "", err
+	v4 := ipaddr.To4()
+	ezap.Info(v4)
+
+	return v4 != nil
 }
 
-func GetAllMacAddr() ([]string, error) {
-	var macAddrs []string
-	netInterfaces, err := net.Interfaces()
-	if err != nil {
-		// fmt.Printf("fail to get net interfaces: %v", err)
-		return macAddrs, err
+// 检查 IP 是否正确，是否为 IPv6 地址
+func IsIPv6(ip string) bool {
+	if IsIPv4(ip) {
+		return false
 	}
 
-	for _, netInterface := range netInterfaces {
-		macAddr := netInterface.HardwareAddr.String()
-		if len(macAddr) == 0 {
-			continue
-		}
-		macAddrs = append(macAddrs, macAddr)
-	}
-	return macAddrs, err
-}
+	ipaddr := net.ParseIP(ip)
 
-func GetAllIP() ([]string, error) {
-	var ips []string
-
-	interfaceAddr, err := net.InterfaceAddrs()
-	if err != nil {
-		// fmt.Printf("fail to get net interface addrs: %v", err)
-		return ips, err
+	if ipaddr == nil {
+		return false
 	}
 
-	for _, address := range interfaceAddr {
-		ipNet, isValidIPNet := address.(*net.IPNet)
-		if isValidIPNet && !ipNet.IP.IsLoopback() {
-			if ipNet.IP.To4() != nil {
-				ips = append(ips, ipNet.IP.String())
-			}
-		}
-	}
-	return ips, err
+	v6 := ipaddr.To16()
+	ezap.Info(v6)
+
+	return v6 != nil
 }

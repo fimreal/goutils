@@ -1,25 +1,35 @@
 package net
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
-func TestSend(t *testing.T) {
-	firstIP, err := GetFirstIP()
-	if err != nil {
-		t.Fatal(err)
-	}
-	AllIP, err := GetAllIP()
-	if err != nil {
-		t.Fatal(err)
-	}
-	AllMacAddr, err := GetAllMacAddr()
-	if err != nil {
-		t.Fatal(err)
+func TestIsIPv4(t *testing.T) {
+	ip := "1.1.1.1"
+	if !IsIPv4(ip) {
+		t.Error("err")
 	}
 
-	fmt.Printf("First IP: %q\n", firstIP)
-	fmt.Printf("All IP: %q\n", AllIP)
-	fmt.Printf("All MAC address: %q\n", AllMacAddr)
+	ip = "epurs.com"
+	if IsIPv4(ip) {
+		t.Error("err")
+	}
+	ip = "1.225.250.1"
+	if IsIPv4(ip) {
+		t.Error("err")
+	}
+	ip = "01.225.223.1"
+	if IsIPv4(ip) {
+		t.Error("err")
+	}
+}
+
+func TestIsIPv6(t *testing.T) {
+	ip := "fe80::742d:e8ff:feb6:cc08"
+	if !IsIPv6(ip) {
+		t.Error("err")
+	}
+
+	ip = "epurs6.com"
+	if IsIPv4(ip) {
+		t.Error("err")
+	}
 }
