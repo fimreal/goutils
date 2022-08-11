@@ -64,7 +64,6 @@ func SimplePost(url string, data []byte, headers map[string]string) ([]byte, err
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	// 省去判断 err ？
 	return body, err
 }
 
@@ -82,4 +81,23 @@ func HttpBasicAuth(url string, username string, password string) ([]byte, error)
 	}
 
 	return ioutil.ReadAll(resp.Body)
+}
+
+func Httpc(url string, method string, data []byte, headers map[string]string) ([]byte, error) {
+	client := &http.Client{}
+
+	req, err := http.NewRequest(method, url, strings.NewReader(string(data)))
+	if err != nil {
+		return nil, err
+	}
+	for key, header := range headers {
+		req.Header.Set(key, header)
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	return body, err
 }
