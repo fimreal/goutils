@@ -16,6 +16,7 @@ import (
 func TestInfo(t *testing.T) {
 	Info("info")
 	Infof("%s", "info 2")
+	SetLogTime("")
 	Infow("birthday", "name", "bb", "time", "1996-11-06")
 }
 

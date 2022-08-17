@@ -16,6 +16,7 @@ type Config struct {
 	Console     bool
 	AddCaller   bool
 	LogFile     *Logfile
+	TimeFormat  string
 }
 
 type Logfile struct {
@@ -45,6 +46,7 @@ func newConfig() *Config {
 			MaxBackups: 7,
 			Compress:   true,
 		},
+		TimeFormat: "2006-1-2T15:04:05.000Z0700",
 	}
 }
 
@@ -59,8 +61,12 @@ func (l *Logger) syncConfig() {
 	encoderConfig := zap.NewProductionConfig().EncoderConfig
 	encoderConfig.LevelKey = "lv"
 	encoderConfig.NameKey = "pj"
-	encoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-		enc.AppendString(t.Format("2006-1-2T15:04:05.000Z0700"))
+	if conf.TimeFormat == "" {
+		encoderConfig.EncodeTime = nil
+	} else {
+		encoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+			enc.AppendString(t.Format(conf.TimeFormat))
+		}
 	}
 
 	if conf.JSONFormat {
@@ -105,7 +111,9 @@ func (l *Logger) syncConfig() {
 	l.Logger = logger.Sugar()
 }
 
-/* **设置输出的日志等级
+/*
+	**设置输出的日志等级
+
 Options: -1(info), 0(debug), 1(warn), 2(error), 3(dpanic), 4(panic), 5(fatal)
 Default: -1(info)
 */
@@ -195,5 +203,11 @@ func SetLogrotate(maxsize, maxage, maxbackups int, compress bool) {
 	f.MaxAge = maxage
 	f.MaxBackups = maxbackups
 	f.Compress = compress
+	c.syncConfig()
+}
+
+// 配置时间格式，默认为 2006-1-2T15:04:05.000Z0700
+func SetLogTime(timeFormat string) {
+	c.Config.TimeFormat = timeFormat
 	c.syncConfig()
 }
