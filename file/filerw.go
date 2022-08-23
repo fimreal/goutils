@@ -3,19 +3,34 @@ package file
 import (
 	"bufio"
 	"io"
-	"io/ioutil"
 	"os"
 )
 
+// os.ReadFile()
 func GetFileContentByte(fileName string) ([]byte, error) {
-	return ioutil.ReadFile(fileName)
+	return os.ReadFile(fileName)
 }
 
-func WriteToFile(fileName string, b []byte) (err error) {
-	return ioutil.WriteFile(fileName, b, 0644)
+// os.WriteFile()
+func WriteToFile(fileName string, b []byte) error {
+	return os.WriteFile(fileName, b, 0644)
 }
 
-/* 简单复制文件，如果目标文件不存在，则创建，权限 0644
+// 追加写入文件，如果不存在则创建文件
+func AppendToFile(filename string, b []byte) error {
+	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_SYNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = f.Write(b)
+	return err
+}
+
+/*
+	简单复制文件，如果目标文件不存在，则创建，权限 0644
+
 返回复制字节数，和 error
 */
 func CopyFile(srcFilePath string, dstFilePath string) (int64, error) {
