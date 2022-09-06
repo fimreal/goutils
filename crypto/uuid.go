@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetUUID() (string, error) {
+func UUID() (string, error) {
 	u, err := uuid.NewRandom()
 	if err != nil {
 		return "", err

@@ -7,6 +7,7 @@ import (
 )
 
 // 检查 IP 是否正确，是否为 IPv4 地址
+// https://github.com/ip2location/ip2location-go/blob/master/iptools.go#L32
 func IsIPv4(ip string) bool {
 	ipaddr := net.ParseIP(ip)
 
@@ -21,6 +22,7 @@ func IsIPv4(ip string) bool {
 }
 
 // 检查 IP 是否正确，是否为 IPv6 地址
+// https://github.com/ip2location/ip2location-go/blob/master/iptools.go#L49
 func IsIPv6(ip string) bool {
 	if IsIPv4(ip) {
 		return false
