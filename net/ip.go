@@ -3,8 +3,6 @@ package net
 import (
 	"net"
 	"strings"
-
-	"github.com/fimreal/goutils/ezap"
 )
 
 // 检查 IP 是否正确，是否为 IPv4 地址
@@ -17,7 +15,7 @@ func IsIPv4(ip string) bool {
 	}
 
 	v4 := ipaddr.To4()
-	ezap.Info(v4)
+	// ezap.Info(v4)
 
 	return v4 != nil
 }
@@ -36,7 +34,7 @@ func IsIPv6(ip string) bool {
 	}
 
 	v6 := ipaddr.To16()
-	ezap.Info(v6)
+	// ezap.Info(v6)
 
 	return v6 != nil
 }
