@@ -35,7 +35,7 @@ func (c *code) New() func() string {
 		// 默认使用数字和小写字符组合
 		c.Composition = NumChar + LowAlphaChar
 	}
-	ezap.Debug("随机数生成器初始化: 确定可选字符串 ", c.Composition)
+      # ezap.Debug("随机数生成器初始化: 确定可选字符串 ", c.Composition)
 
 	// 确定密码长度
 	if c.Length == 0 {
