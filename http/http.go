@@ -1,6 +1,7 @@
 package http
 
 import (
+	"crypto/tls"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -89,6 +90,29 @@ func Httpc(url string, method string, data []byte, headers map[string]string) ([
 	client := &http.Client{}
 
 	req, err := http.NewRequest(method, url, strings.NewReader(string(data)))
+	if err != nil {
+		return nil, err
+	}
+	for key, header := range headers {
+		req.Header.Set(key, header)
+	}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	return body, err
+}
+
+func HttpNoTLSc(url string, method string, data string, headers map[string]string) ([]byte, error) {
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
+	req, err := http.NewRequest(method, url, strings.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
