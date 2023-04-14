@@ -2,7 +2,6 @@ package net
 
 import (
 	"net"
-	"strings"
 )
 
 // 检查 IP 是否正确，是否为 IPv4 地址
@@ -39,15 +38,35 @@ func IsIPv6(ip string) bool {
 	return v6 != nil
 }
 
+// 判断是否为保留网络地址
+// https://en.wikipedia.org/wiki/Reserved_IP_addresses
 func IsLanIPv4(ip string) bool {
 	if !IsIPv4(ip) {
 		return false
 	}
+	netIP := net.ParseIP(ip)
+	revNet := []string{
+		"0.0.0.0/8",
+		"10.0.0.0/8",
+		"100.64.0.0/10",
+		"127.0.0.0/8",
+		"169.254.0.0/16",
+		"172.16.0.0/12",
+		"192.0.0.0/24",
+		"192.0.2.0/24",
+		"192.88.99.0/24",
+		"192.168.0.0/16",
+		"198.18.0.0/15",
+		"198.51.100.0/24",
+		"203.0.113.0/24",
+		"224.0.0.0/4",
+		"240.0.0.0/4",
+		"255.255.255.255/32",
+	}
 
-	lanex := []string{"10.", "192.168.", "172.16.", "172.17.", "172.18.", "172.19.", "172.20.", "172.21.", "172.22.", "172.23.", "172.24.", "172.25.", "172.26.", "172.27.", "172.28.", "172.29.", "172.30.", "172.31.", "169.254"}
-
-	for _, lan := range lanex {
-		if strings.HasPrefix(ip, lan) {
+	for _, cidr := range revNet {
+		_, ipNet, _ := net.ParseCIDR(cidr)
+		if ipNet.Contains(netIP) {
 			return true
 		}
 	}
