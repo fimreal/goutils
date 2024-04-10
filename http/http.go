@@ -3,7 +3,6 @@ package http
 import (
 	"crypto/tls"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -15,7 +14,7 @@ func HttpGet(url string) (string, error) {
 	}
 	defer resp.Body.Close()
 
-	res, err := ioutil.ReadAll(resp.Body)
+	res, err := io.ReadAll(resp.Body)
 	return string(res), err
 }
 
@@ -66,7 +65,7 @@ func SimplePost(url string, data []byte, headers map[string]string) ([]byte, err
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	return body, err
 }
 
@@ -83,7 +82,7 @@ func HttpBasicAuth(url string, username string, password string) ([]byte, error)
 		return nil, err
 	}
 
-	return ioutil.ReadAll(resp.Body)
+	return io.ReadAll(resp.Body)
 }
 
 func Httpc(url string, method string, data []byte, headers map[string]string) ([]byte, error) {
@@ -101,7 +100,7 @@ func Httpc(url string, method string, data []byte, headers map[string]string) ([
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	return body, err
 }
 
@@ -124,14 +123,14 @@ func HttpNoTLSc(url string, method string, data string, headers map[string]strin
 		return nil, err
 	}
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	return body, err
 }
 
 /*
 defer resp.Body.Close()
 
-body, err := ioutil.ReadAll(resp.Body)
+body, err := io.ReadAll(resp.Body)
 */
 func HttpDo(url string, method string, data []byte, headers map[string]string) (*http.Response, error) {
 	client := &http.Client{}
