@@ -6,7 +6,7 @@ import (
 	"sort"
 	"syscall"
 
-	proc "github.com/shirou/gopsutil/process"
+	proc "github.com/shirou/gopsutil/v3/process"
 )
 
 // Send syscall.SIGHUP to process(pid)
